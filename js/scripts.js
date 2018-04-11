@@ -23,80 +23,76 @@ $finishBtn.css('font-weight','bold');
 
 // check both player arrays each time
 function isGameOver() {
-  for (i = 0; i < 9; i++) {
-    // check if player 1 has winning combo
-    if (
-      // across
-      grid1[0] && grid1[1] && grid1[2] ||
-      grid1[3] && grid1[4] && grid1[5] ||
-      grid1[6] && grid1[7] && grid1[8] ||
-      // down
-      grid1[0] && grid1[3] && grid1[6] ||
-      grid1[1] && grid1[4] && grid1[7] ||
-      grid1[2] && grid1[5] && grid1[8] ||
-      // diagonal
-      grid1[0] && grid1[4] && grid1[8] ||
-      grid1[6] && grid1[4] && grid1[2]
-    ) {
-      $finish
-      .addClass('screen-win-one')
-      .removeAttr('style');
-      $finishMsg.append(`Winner`);
-      break;
-    }
-    // check if player 2 has winning combo
-    if (
-      // across
-      grid2[0] && grid2[1] && grid2[2] ||
-      grid2[3] && grid2[4] && grid2[5] ||
-      grid2[6] && grid2[7] && grid2[8] ||
-      // down
-      grid2[0] && grid2[3] && grid2[6] ||
-      grid2[1] && grid2[4] && grid2[7] ||
-      grid2[2] && grid2[5] && grid2[8] ||
-      // diagonal
-      grid2[0] && grid2[4] && grid2[8] ||
-      grid2[6] && grid2[4] && grid2[2]
-    ) {
-      $finish
-      .addClass('screen-win-two')
-      .removeAttr('style');
-      $finishMsg.append(`Winner`);
-      break;
-    }
+  if (
+    // across
+    grid1[0] && grid1[1] && grid1[2] ||
+    grid1[3] && grid1[4] && grid1[5] ||
+    grid1[6] && grid1[7] && grid1[8] ||
+    // down
+    grid1[0] && grid1[3] && grid1[6] ||
+    grid1[1] && grid1[4] && grid1[7] ||
+    grid1[2] && grid1[5] && grid1[8] ||
+    // diagonal
+    grid1[0] && grid1[4] && grid1[8] ||
+    grid1[6] && grid1[4] && grid1[2]
+  ) {
+    $finish
+    .addClass('screen-win-one')
+    .removeAttr('style');
+    $finishMsg.append(`Winner`);
+  }
+  // check if player 2 has winning combo
+  if (
+    // across
+    grid2[0] && grid2[1] && grid2[2] ||
+    grid2[3] && grid2[4] && grid2[5] ||
+    grid2[6] && grid2[7] && grid2[8] ||
+    // down
+    grid2[0] && grid2[3] && grid2[6] ||
+    grid2[1] && grid2[4] && grid2[7] ||
+    grid2[2] && grid2[5] && grid2[8] ||
+    // diagonal
+    grid2[0] && grid2[4] && grid2[8] ||
+    grid2[6] && grid2[4] && grid2[2]
+  ) {
+    $finish
+    .addClass('screen-win-two')
+    .removeAttr('style');
+    $finishMsg.append(`Winner`);
   }
 }
 
 // rotate players each click
 function boxDown() {
-  if (clickCount % 2 == 0) {
-    const $this = $(this);
-    const x = $this.data('x');
-    $player1.removeClass('active');
-    $this.addClass('taken box-filled-1').removeAttr("style");
-    $player2.addClass('active');
-    // log player1 move to player1 array
-    grid1[x] = p1Token;
+  const $this = $(this);
+  if (!$this.hasClass('taken')) {
+    if (clickCount % 2 == 0) {
+      const x = $this.data('x');
+      $player1.removeClass('active');
+      $this.addClass('taken box-filled-1').removeAttr("style");
+      $player2.addClass('active');
+      // log player1 move to player1 array
+      grid1[x] = p1Token;
+    }
+    if (clickCount % 2 == 1) {
+      const o = $this.data('y');
+      $player2.removeClass('active');
+      $this.addClass('taken box-filled-2').removeAttr("style");
+      $player1.addClass('active');
+      // log player2 move to player2 array
+      grid2[o] = p2Token;
+    }
+    // check player move against winning array combos
+    isGameOver();
+    // if no winning combo found, on final click declare a draw
+    if (clickCount == 8 && !isGameOver()) {
+      $finish
+      .addClass('screen-win-tie')
+      .removeAttr('style');
+      $finishMsg.append(`It's a Tie!`);
+    }
+    clickCount += 1;
   }
-  if (clickCount % 2 == 1) {
-    const $this = $(this);
-    const o = $this.data('y');
-    $player2.removeClass('active');
-    $this.addClass('taken box-filled-2').removeAttr("style");
-    $player1.addClass('active');
-    // log player2 move to player2 array
-    grid2[o] = p2Token;
-  }
-  // check player move against winning array combos
-  isGameOver();
-  // if no winning combo found, on final click declare a draw
-  if (clickCount == 8 && !isGameOver()) {
-    $finish
-    .addClass('screen-win-tie')
-    .removeAttr('style');
-    $finishMsg.append(`It's a Tie!`);
-  }
-  clickCount += 1;
 };
 
 // display player icon on hover
