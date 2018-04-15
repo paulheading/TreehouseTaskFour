@@ -7,7 +7,7 @@ const $player2 = $('#player2');
 const $boxes = $('.boxes');
 const $box = $('.box');
 const p1Token = 'X';
-const p2T oken = 'O';
+const p2Token = 'O';
 
 const $finish = $('#finish');
 const $finishMsg = $('.message',$finish);
